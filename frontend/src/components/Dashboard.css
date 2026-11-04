@@ -1,0 +1,155 @@
+
+/* Main dashboard */
+.dashboard {
+  max-width: 1200px;
+  margin: auto;
+  padding: 30px 20px;
+  font-family: Arial, sans-serif;
+  color: #243047;
+}
+
+/* Website title */
+.dashboard h1 {
+  text-align: center;
+  color: #3F4144;
+  font-size: 36px;
+  margin-bottom: 25px;
+}
+
+/* Navigation bar */
+.dashboard nav {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 30px;
+  background-color: #3F4144;
+  padding: 18px;
+  border-radius: 10px;
+}
+
+.dashboard nav a {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.dashboard nav a:hover {
+  text-decoration: underline;
+}
+
+/* Welcome section */
+.welcome {
+  background-color: #EAEAE7;
+  text-align: center;
+  padding: 30px;
+  margin-top: 25px;
+  border-radius: 12px;
+}
+
+.welcome h2 {
+  color: #3F4144;
+  margin-bottom: 10px;
+}
+
+.welcome p {
+  color: #4b5563;
+}
+
+/* Feature cards */
+.features {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  margin-top: 25px;
+}
+
+.card {
+  background-color: white;
+  border: 1px solid #D8D8D5;
+  border-radius: 12px;
+  padding: 25px 15px;
+  text-align: center;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+}
+
+.card h3 {
+  color: #3F4144;
+  margin-bottom: 12px;
+}
+
+.card p {
+  color: #5b6472;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* Tables */
+.tables {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 20px;
+  margin-top: 30px;
+}
+
+.table-box {
+  background-color: white;
+  border: 1px solid #D8D8D5;
+  border-radius: 12px;
+  overflow-x: auto;
+}
+
+.table-box h3 {
+  background-color: #EAEAE7;
+  color: #3F4144;
+  text-align: center;
+  padding: 15px;
+  margin: 0;
+}
+
+.dashboard table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.dashboard th {
+  background-color: #F0F0EE;
+  color: #243047;
+}
+
+.dashboard td {
+  color: #374151;
+  background-color: white;
+}
+
+.dashboard th,
+.dashboard td {
+  padding: 13px;
+  text-align: left;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.dashboard tbody tr:nth-child(even) td {
+  background-color: #F7F7F5;
+}
+
+/* Tablet screens */
+@media (max-width: 900px) {
+  .features {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .tables {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Phone screens */
+@media (max-width: 500px) {
+  .features {
+    grid-template-columns: 1fr;
+  }
+
+  .dashboard {
+    padding: 15px;
+  }
+}
