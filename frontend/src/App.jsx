@@ -2,6 +2,8 @@ import { useState } from "react";
 import Dashboard from "./components/Dashboard";
 import AddApplication from "./components/AddApplication";
 import FilterApplicationsFollowUp from "./components/FilterApplicationsFollowUp";
+import ApplicationStatus from "./components/ApplicationStatus";
+import "./App.css";
 
 function App() {
   // testing sample apps
