@@ -1,0 +1,99 @@
+.add-application {
+  max-width: 1250px;
+  margin: 37px auto;
+  padding: 0 20px 40px;
+  font-family: Arial, sans-serif;
+  color: #3f4144;
+}
+
+.add-application-box {
+  max-width: 850px;
+  margin: auto;
+  background-color: white;
+  border: 1px solid #d8d8d5;
+  border-radius: 11px;
+  padding: 31px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+}
+
+.add-application h2 {
+  text-align: center;
+  margin-top: 0;
+  margin-bottom: 8px;
+  color: #3f4144;
+}
+
+.form-description {
+  text-align: center;
+  color: #5b6472;
+  margin-bottom: 25px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 21px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  font-weight: bold;
+  margin-bottom: 7px;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  font-family: Arial, sans-serif;
+  font-size: 15px;
+  padding: 12px;
+  border: 1px solid #c9c9c5;
+  border-radius: 8px;
+  box-sizing: border-box;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: 2px solid #777a7e;
+  border-color: transparent;
+}
+
+.save-button {
+  width: 100%;
+  background-color: #3f4144;
+  color: white;
+  border: none;
+  border-radius: 7px;
+  padding: 15px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.save-button:hover {
+  background-color: #55585c;
+}
+
+.success-message {
+  margin-top: 15px;
+  text-align: center;
+  font-weight: bold;
+  color: #347a45;
+}
+
+@media (max-width: 650px) {
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .add-application-box {
+    padding: 20px;
+  }
+}
