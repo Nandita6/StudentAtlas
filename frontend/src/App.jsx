@@ -12,7 +12,7 @@ function App() {
       id: 1,
       company: "Microsoft",
       role: "Software Engineer Intern",
-      status: "Assessment",
+      status: "Interview / Assessment",
       followUpDate: "2026-11-10",
     },
     {
