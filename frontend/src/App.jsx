@@ -45,10 +45,23 @@ function App() {
       <Dashboard />
 
       <AddApplication onAddApplication={addApplication} />
+      <h2>Application Tracker</h2>
 
-      <FilterApplicationsFollowUp applications={applications} />
-    </>
-  );
+    {applications.map((application) => (
+      <div key={application.id}>
+        <h3>{application.company}</h3>
+        <p>{application.role || application.position}</p>
+
+        <ApplicationStatus
+          application={application}
+          onStatusChange={updateApplicationStatus}
+        />
+      </div>
+    ))}
+
+    <FilterApplicationsFollowUp applications={applications} />
+  </>
+);
 }
 
 export default App;
