@@ -1,0 +1,50 @@
+.application-status {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 16px;
+  margin-bottom: 16px;
+}
+
+/* Label above the dropdown */
+.application-status label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #243047;
+}
+
+/* Dropdown menu */
+.application-status select {
+  width: 100%;
+  max-width: 300px;
+  padding: 10px 12px;
+
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  color: #243047;
+
+  background-color: #FFFFFF;
+  border: 1px solid #D1D5DB;
+  border-radius: 8px;
+
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+}
+
+/* When hovering over the dropdown */
+.application-status select:hover {
+  border-color: #64748B;
+}
+
+/* When the dropdown is selected */
+.application-status select:focus {
+  outline: 2px solid #64748B;
+  outline-offset: 2px;
+}
+
+/* Dropdown options */
+.application-status option {
+  background-color: #FFFFFF;
+  color: #243047;
+  font-size: 14px;
+}
