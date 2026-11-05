@@ -30,6 +30,16 @@ function App() {
     console.log("Saved applications:", [...applications, newApplication]);
   }
 
+  function updateApplicationStatus(applicationId, newStatus) {
+  setApplications((previousApplications) =>
+    previousApplications.map((application) =>
+      application.id === applicationId
+        ? { ...application, status: newStatus }
+        : application
+    )
+  );
+}
+
   return (
     <>
       <Dashboard />
