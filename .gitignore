@@ -1,0 +1,2 @@
+# Ignore generated SQLite database files
+backend/src/database/data/
