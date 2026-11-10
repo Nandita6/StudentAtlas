@@ -1,3 +1,10 @@
+import {
+  addApplication,
+  getApplicationById,
+  updateApplicationStatus as updateStatusInRepository,
+} from "../repositories/applicationRepository.js";
+
+
 const validStatuses = [
   "Saved",
   "Applied",
@@ -86,4 +93,43 @@ export function updateApplicationStatus(application, newStatus) {
     ...application,
     status: newStatus,
   };
+}
+
+export function saveApplication(applicationData) {
+  const application = createApplication(applicationData);
+
+  const databaseApplication = {
+    company_name: application.company,
+    job_title: application.position,
+    status: application.status,
+    application_date: application.applicationDate,
+    deadline: application.deadline ?? null,
+    follow_up_date: application.followUpDate ?? null,
+    job_url: application.jobUrl ?? null,
+    notes: application.notes ?? null,
+  };
+
+  const id = addApplication(databaseApplication);
+
+  return getApplicationById(id);
+}
+
+export function changeApplicationStatus(id, newStatus) {
+  
+    validateApplicationStatus(newStatus);
+
+  const application = getApplicationById(id);
+
+  if (!application) {
+    throw new Error("Application not found.");
+  }
+
+  const updated = updateStatusInRepository(id, newStatus);
+
+  
+  if (!updated) {
+    throw new Error("Application status could not be updated.");
+  }
+
+  return getApplicationById(id);
 }

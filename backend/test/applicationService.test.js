@@ -6,6 +6,8 @@ import {
   createApplication,
   validateApplicationStatus,
   updateApplicationStatus,
+  saveApplication,
+  changeApplicationStatus,
 } from "../src/services/applicationService.js";
 
 
@@ -117,4 +119,51 @@ test("updateApplicationStatus changes the status", () => {
   
   assert.equal(updatedApplication.status, "Under Review");
   assert.equal(updatedApplication.company, "Google");
+});
+
+
+test("saveApplication stores application in database", () => {
+  const application = {
+    company: "Amazon",
+    position: "Software Engineer Intern",
+    applicationDate: "2026-11-10",
+    status: "Applied",
+    notes: "Submitted online",
+  };
+
+  const savedApplication = saveApplication(application);
+
+  assert.equal(savedApplication.company_name, "Amazon");
+  assert.equal(savedApplication.job_title, "Software Engineer Intern");
+  assert.equal(savedApplication.status, "Applied");
+  assert.equal(savedApplication.application_date, "2026-11-10");
+});
+
+test("changeApplicationStatus updates saved application status", () => {
+  const application = {
+    company: "Meta",
+    position: "Software Engineer Intern",
+    applicationDate: "2026-11-10",
+    status: "Applied",
+  };
+
+  const savedApplication = saveApplication(application);
+
+  const updatedApplication = changeApplicationStatus(
+    savedApplication.id,
+    "Interview"
+
+  );
+
+  assert.equal(updatedApplication.status, "Interview");
+  assert.equal(updatedApplication.id, savedApplication.id);
+
+});
+
+test("changeApplicationStatus throws error for missing application", () => {
+  assert.throws(
+    () => changeApplicationStatus(999999, "Interview"),
+    /Application not found/
+    
+  );
 });
