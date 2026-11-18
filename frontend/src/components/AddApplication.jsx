@@ -1,11 +1,23 @@
 import { useState } from 'react';
 import './AddApplication.css';
 
+// Add seven calendar days to a date from the form.
+function getFollowUpDate(applicationDate) {
+  if (!applicationDate) return '';
+
+  const date = new Date(applicationDate + 'T00:00:00Z');
+  if (Number.isNaN(date.getTime())) return '';
+  date.setUTCDate(date.getUTCDate() + 7);
+  return date.toISOString().slice(0, 10);
+}
+
 function AddApplication({ onAddApplication }) {
   const [applicationData, setapplicationData] = useState({
     company: '',
     position: '',
     applicationDate: '',
+    deadline: '',
+    followUpDate: '',
     status: '',
     notes: '',
   });
@@ -16,21 +28,45 @@ function AddApplication({ onAddApplication }) {
 
   function updateField(event) {
     const { name, value } = event.target;
+    setMessage('');
+    setHasError(false);
 
-    setapplicationData({
-      ...applicationData,
-      [name]: value,
+    setapplicationData((previous) => {
+      const updated = { ...previous, [name]: value };
+
+      if (name === 'applicationDate') {
+        updated.followUpDate = getFollowUpDate(value);
+      }
+
+      return updated;
     });
   }
 
   async function saveApplication(event) {
     event.preventDefault();
+    if (saving) return;
     setMessage('');
     setHasError(false);
+
+    const { company, position, applicationDate, status } = applicationData;
+
+    if (!company.trim() || !position.trim() || !applicationDate || !status) {
+      setHasError(true);
+      setMessage('Application not saved. Please fill in Company Name, Position, Application Date and Current Status.');
+      return;
+    }
+
     setSaving(true);
 
     try {
-      await onAddApplication(applicationData);
+      await onAddApplication({
+        ...applicationData,
+        company: company.trim(),
+        position: position.trim(),
+        notes: applicationData.notes.trim(),
+        deadline: applicationData.deadline || null,
+        followUpDate: applicationData.followUpDate || getFollowUpDate(applicationDate),
+      });
 
       setMessage('Application saved successfully!');
 
@@ -38,12 +74,14 @@ function AddApplication({ onAddApplication }) {
         company: '',
         position: '',
         applicationDate: '',
+        deadline: '',
+        followUpDate: '',
         status: '',
         notes: '',
       });
     } catch (error) {
       setHasError(true);
-      setMessage('Could not save application: ' + error.message);
+      setMessage('Application not saved. ' + (error.message || 'Please try again.'));
     } finally {
       setSaving(false);
     }
@@ -58,7 +96,7 @@ function AddApplication({ onAddApplication }) {
           Add a job/internship application to your StudentAtlas tracker.
         </p>
 
-        <form onSubmit={saveApplication}>
+        <form onSubmit={saveApplication} noValidate>
           <div className="form-row">
             <div className="form-group">
               <label htmlFor="company">Company Name</label>
@@ -124,8 +162,33 @@ function AddApplication({ onAddApplication }) {
             </div>
           </div>
 
+          <div className="form-row">
+            <div className="form-group">
+              <label htmlFor="deadline">Deadline (optional)</label>
+              <input
+                id="deadline"
+                name="deadline"
+                type="date"
+                value={applicationData.deadline}
+                onChange={updateField}
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="followUpDate">Follow-up Date</label>
+              <input
+                id="followUpDate"
+                name="followUpDate"
+                type="date"
+                value={applicationData.followUpDate}
+                onChange={updateField}
+              />
+              <small>Automatically set to 7 days after applying.</small>
+            </div>
+          </div>
+
           <div className="form-group">
-            <label htmlFor="notes">Notes</label>
+            <label htmlFor="notes">Notes (optional)</label>
             <textarea
               id="notes"
               name="notes"
