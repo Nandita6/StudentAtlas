@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import { useState } from "react";
+import ApplicationStatus from "./ApplicationStatus";
 import "./FilterApplicationsFollowUp.css";
 
-export default function FilterApplicationsFollowUp({ applications }) {
+export default function FilterApplicationsFollowUp({ applications, onStatusChange, followUpsOnly = false }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("All");
   const [showOnlyUpcoming, setShowOnlyUpcoming] = useState(false);
@@ -15,39 +16,39 @@ export default function FilterApplicationsFollowUp({ applications }) {
 
     const matchesStatus = statusFilter === "All" || app.status === statusFilter;
 
-    
+
     let matchesFollowUp = true;
-    
+
     if (showOnlyUpcoming) {
       const today = new Date().toISOString().split("T")[0];
-    
+
       matchesFollowUp =
         Boolean(app.followUpDate) && app.followUpDate >= today;
     }
 
 
-    return matchesSearch && matchesStatus && matchesFollowUp;
+    return matchesSearch && matchesStatus && matchesFollowUp &&
+      (!followUpsOnly || Boolean(app.followUpDate));
   });
 
   return (
     <div className="filter-container">
-      <h2>Application Filter and Follow-up Tracker</h2>
-      <p style={{ color: "#666" }}>
-        Here you can filter your applications and check any upcoming follow-up
-        dates
-      </p>
+      <h2>{followUpsOnly ? "Follow-up Tracker" : "Application Tracker"}</h2>
+      <p>{followUpsOnly ? "Search your scheduled follow-ups." : "Search and filter your saved applications."}</p>
 
       <div className="filter-controls">
         <input
           type="text"
+          aria-label="Search applications"
           placeholder="Search by company or role..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           className="search-input"
         />
 
-        
+
         <select
+          aria-label="Filter by status"
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value)}
           className="status-dropdown"
@@ -63,18 +64,12 @@ export default function FilterApplicationsFollowUp({ applications }) {
         </select>
 
 
-        <button
-          onClick={() => setShowOnlyUpcoming(!showOnlyUpcoming)}
-          className="upcoming-btn"
-          style={{
-            backgroundColor: showOnlyUpcoming ? "#007bff" : "#f0f0f0",
-            color: showOnlyUpcoming ? "#fff" : "#333",
-          }}
-        >
-          {showOnlyUpcoming
-            ? "Showing Upcoming Follow-ups"
-            : "Filter Upcoming Follow-ups"}
-        </button>
+        {followUpsOnly && (
+          <button type="button" aria-pressed={showOnlyUpcoming} className="upcoming-btn"
+            onClick={() => setShowOnlyUpcoming(!showOnlyUpcoming)}>
+            {showOnlyUpcoming ? "Show all follow-ups" : "Upcoming only"}
+          </button>
+        )}
       </div>
 
       <div className="app-list">
@@ -84,16 +79,17 @@ export default function FilterApplicationsFollowUp({ applications }) {
               <h3>{app.company}</h3>
               <p>Role: {app.role || app.position}</p>
               <div className="app-details">
-                <span className="status-badge">Status: {app.status}</span>
+                <span className="status-badge" data-status={app.status}>{app.status}</span>
                 <span className="followup-date">
-                  Followup is due: {app.followUpDate}
+                  Follow-up: {app.followUpDate || "Not set"}
                 </span>
               </div>
+              {onStatusChange && <ApplicationStatus application={app} onStatusChange={onStatusChange} />}
             </div>
           ))
         ) : (
           <p style={{ textAlign: "center", color: "#888" }}>
-            No applications currently match your filters
+            {followUpsOnly ? "No follow-up dates match your filters." : "No applications match your filters."}
           </p>
         )}
       </div>

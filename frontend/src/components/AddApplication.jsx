@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import './AddApplication.css';
 
@@ -12,6 +11,8 @@ function AddApplication({ onAddApplication }) {
   });
 
   const [message, setMessage] = useState('');
+  const [hasError, setHasError] = useState(false);
+  const [saving, setSaving] = useState(false);
 
   function updateField(event) {
     const { name, value } = event.target;
@@ -25,6 +26,8 @@ function AddApplication({ onAddApplication }) {
   async function saveApplication(event) {
     event.preventDefault();
     setMessage('');
+    setHasError(false);
+    setSaving(true);
 
     try {
       await onAddApplication(applicationData);
@@ -39,7 +42,10 @@ function AddApplication({ onAddApplication }) {
         notes: '',
       });
     } catch (error) {
+      setHasError(true);
       setMessage('Could not save application: ' + error.message);
+    } finally {
+      setSaving(false);
     }
   }
 
@@ -99,6 +105,7 @@ function AddApplication({ onAddApplication }) {
               <select
                 id="status"
                 name="status"
+                data-status={applicationData.status}
                 value={applicationData.status}
                 onChange={updateField}
                 required
@@ -129,11 +136,11 @@ function AddApplication({ onAddApplication }) {
             />
           </div>
 
-          <button className="save-button" type="submit">
-            Save Application
+          <button className="save-button" type="submit" disabled={saving}>
+            {saving ? "Saving..." : "Save Application"}
           </button>
 
-          {message && <p className="success-message">{message}</p>}
+          {message && <p className={hasError ? "error-message" : "success-message"} role={hasError ? "alert" : "status"}>{message}</p>}
         </form>
       </div>
     </section>

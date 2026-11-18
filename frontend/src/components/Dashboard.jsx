@@ -1,10 +1,14 @@
-
 import './Dashboard.css';
 
-function Dashboard({ applications = [] }) {
+function Dashboard({ applications = [], onOpenApplications }) {
 
   // Show the four most recent applications
   const recentApplications = applications.slice(0, 4);
+  const stats = [
+    { label: 'Applied', count: applications.filter(app => app.status === 'Applied').length },
+    { label: 'Interviews', count: applications.filter(app => app.status === 'Interview').length },
+    { label: 'Offers', count: applications.filter(app => app.status === 'Offer').length },
+  ];
 
   // Find upcoming deadlines and follow-ups
   const today = new Date().toISOString().split('T')[0];
@@ -36,41 +40,18 @@ function Dashboard({ applications = [] }) {
   return (
     <div className="dashboard">
 
-      <h1>StudentAtlas</h1>
-
-      <nav>
-        <a href="#dashboard">Dashboard</a>
-        <a href="#applications">Applications</a>
-        <a href="#resources">Resources</a>
-        <a href="#documents">Documents</a>
-        <a href="#career">Career Hub</a>
-      </nav>
-
-      <div className="welcome" id="dashboard">
-        <h2>Welcome back!</h2>
-        <p>Keep track of your job search with StudentAtlas.</p>
+      <h1>Dashboard</h1>
+      <p className="page-description">Manage your career journey.</p>
+      <div className="welcome">
+        <div><h2>Welcome back!</h2><p>Keep track of your job search with StudentAtlas.</p></div>
+        <button className="primary-button" onClick={onOpenApplications}>+ Add application</button>
       </div>
-
-      <div className="features">
-        <div className="card">
-          <h3>Application Tracker</h3>
-          <p>Track and manage your job applications</p>
-        </div>
-
-        <div className="card">
-          <h3>Search Resources</h3>
-          <p>Find and save job opportunities</p>
-        </div>
-
-        <div className="card">
-          <h3>Document Hub</h3>
-          <p>Organize resumes, cover letters, and documents</p>
-        </div>
-
-        <div className="card">
-          <h3>Career Hub</h3>
-          <p>Explore career events and resources</p>
-        </div>
+      <div className="stats">
+        {stats.map(stat => (
+          <div className="stat-card" key={stat.label}>
+            <p>{stat.label}</p><strong>{stat.count}</strong>
+          </div>
+        ))}
       </div>
 
       <div className="tables">
@@ -96,8 +77,8 @@ function Dashboard({ applications = [] }) {
                 recentApplications.map((app) => (
                   <tr key={app.id}>
                     <td>{app.position || app.role} - {app.company}</td>
-                    <td>{app.status}</td>
-                    <td>{app.applicationDate}</td>
+                    <td><span className="status-badge" data-status={app.status}>{app.status}</span></td>
+                    <td>{app.applicationDate || "Not set"}</td>
                   </tr>
                 ))
               )}

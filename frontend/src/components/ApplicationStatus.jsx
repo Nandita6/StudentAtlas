@@ -17,6 +17,7 @@ function ApplicationStatus({ application, onStatusChange }) {
 
       <select
         id={`status-${application.id}`}
+        data-status={application.status}
         value={application.status}
         onChange={(event) => onStatusChange(application.id, event.target.value)}
       >

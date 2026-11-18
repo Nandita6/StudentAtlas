@@ -1,12 +1,15 @@
-
 import { useState, useEffect } from "react";
 import Dashboard from "./components/Dashboard";
 import AddApplication from "./components/AddApplication";
 import FilterApplicationsFollowUp from "./components/FilterApplicationsFollowUp";
-import ApplicationStatus from "./components/ApplicationStatus";
+import logo from "./assets/logo.png";
 import "./App.css";
 
+const pages = ["Dashboard", "Applications", "Follow-ups", "Search Resources", "Documents", "Career Hub", "My Profile"];
+
 function App() {
+  const [page, setPage] = useState("Dashboard");
+  const [statusError, setStatusError] = useState("");
   const [applications, setApplications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -82,6 +85,7 @@ function App() {
   }
 
   async function updateApplicationStatus(applicationId, newStatus) {
+    setStatusError("");
     try {
       const response = await fetch(
         `/api/applications/${applicationId}/status`,
@@ -108,43 +112,72 @@ function App() {
       );
     } catch (err) {
       console.error("Failed to update status:", err);
-      alert(`Error: ${err.message}`);
+      setStatusError(err.message);
     }
   }
 
+  function openPage(nextPage) {
+    setPage(nextPage);
+    window.scrollTo(0, 0);
+  }
+
   return (
-    <>
-      <Dashboard applications={applications} />
+    <div className="site">
+      <header className="top-bar">
+        <button className="brand" onClick={() => openPage("Dashboard")}>
+          <img src={logo} alt="" />
+          <span>StudentAtlas</span>
+        </button>
+        <button className="profile-button" onClick={() => openPage("My Profile")}>My Profile</button>
+      </header>
 
-      <AddApplication onAddApplication={addApplication} />
-      <h2>Application Tracker</h2>
+      <div className="site-layout">
+        <aside className="sidebar">
+          <nav aria-label="Main navigation">
+            {pages.map((name) => (
+              <button key={name} className={page === name ? "active" : ""}
+                aria-current={page === name ? "page" : undefined}
+                onClick={() => openPage(name)}>{name}</button>
+            ))}
+          </nav>
+        </aside>
 
-      {loading && <p>Loading applications from the database.</p>}
-      {error && <p style={{ color: "red" }}>Error: {error}</p>}
+        <main className="main-content">
+          {loading && <p role="status">Loading applications...</p>}
+          {error && <p className="error-message" role="alert">{error}</p>}
+          {page === "Dashboard" && <Dashboard applications={applications} onOpenApplications={() => openPage("Applications")} />}
 
-      {!loading &&
-        !error &&
-        applications.map((application) => (
-          <div
-            key={application.id}
-            style={{
-              border: "1px solid #ccc",
-              padding: "10px",
-              margin: "10px 0",
-            }}
-          >
-            <h3>{application.company}</h3>
-            <p>{application.role || application.position}</p>
+          {page === "Applications" && (
+            <>
+              <h1>Applications</h1>
+              <p className="page-description">Add, search, and manage your job applications.</p>
+              <div className="applications-layout">
+                <AddApplication onAddApplication={addApplication} />
+                <section className="tracker-panel">
+                  {statusError && <p className="error-message" role="alert">{statusError}</p>}
+                  <FilterApplicationsFollowUp applications={applications} onStatusChange={updateApplicationStatus} />
+                </section>
+              </div>
+            </>
+          )}
 
-            <ApplicationStatus
-              application={application}
-              onStatusChange={updateApplicationStatus}
-            />
-          </div>
-        ))}
+          {page === "Follow-ups" && (
+            <>
+              <h1>Follow-ups</h1>
+              <p className="page-description">Keep track of your saved follow-up dates.</p>
+              <section className="tracker-panel">
+                <FilterApplicationsFollowUp key="followups" applications={applications} followUpsOnly={true} />
+              </section>
+            </>
+          )}
 
-      <FilterApplicationsFollowUp applications={applications} />
-    </>
+          {page === "Search Resources" && <section className="placeholder-panel"><h1>Search Resources</h1><p>AI-assisted job search is planned for a future update.</p></section>}
+          {page === "Documents" && <section className="placeholder-panel"><h1>Documents</h1><p>Resume and document management is planned.</p></section>}
+          {page === "Career Hub" && <section className="placeholder-panel"><h1>Career Hub</h1><p>Career events and resources are planned.</p></section>}
+          {page === "My Profile" && <section className="placeholder-panel"><h1>My Profile</h1><p>User accounts and profile editing will be added in the next step.</p></section>}
+        </main>
+      </div>
+    </div>
   );
 }
 
