@@ -56,12 +56,15 @@ function App() {
         body: JSON.stringify(newApplicationData),
       });
 
+      const savedApp = await response.json().catch(() => null);
+
       if (!response.ok) {
-        const errData = await response.json();
-        throw new Error(errData.error || "Failed to save the application.");
+        throw new Error(savedApp?.error || "The server could not save the application.");
       }
 
-      const savedApp = await response.json();
+      if (response.status !== 201 || !Number.isInteger(savedApp?.id) || savedApp.id < 1) {
+        throw new Error("The server did not confirm the save. Refresh before trying again.");
+      }
 
       const formattedApp = {
         id: savedApp.id,
