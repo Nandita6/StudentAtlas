@@ -22,11 +22,12 @@ export function createApplicationHandler(request, response) {
     response.status(201).json(savedApplication);
   } 
   catch (error) {
-    response.status(400).json({
-      error: error.message,
-    });
-  }
+    if (error.code === "DUPLICATE_APPLICATION") {
+      return response.status(409).json({ error: error.message });
+    }
 
+    response.status(400).json({ error: error.message });
+  }
 }
 
 export function updateApplicationStatusHandler(request, response) {
