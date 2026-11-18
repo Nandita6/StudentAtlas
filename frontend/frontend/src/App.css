@@ -1,0 +1,37 @@
+/* Shared navigation and page layout */
+.top-bar { display: flex; justify-content: space-between; align-items: center; padding: 14px 28px; background: #dce8d7; border-bottom: 1px solid var(--border); gap: 12px; }
+.brand { display: flex; align-items: center; gap: 12px; border: 0; padding: 0; background: transparent; color: #29382e; font-size: 22px; font-weight: bold; }
+.brand img { width: 48px; height: 36px; object-fit: contain; mix-blend-mode: multiply; }
+.profile-button { border: 1px solid #e5b8c4; border-radius: 20px; background: var(--pink); color: #29382e; padding: 9px 15px; }
+.site-layout { min-height: calc(100vh - 66px); display: grid; grid-template-columns: 220px minmax(0, 1fr); }
+.sidebar { background: #edf2e9; border-right: 1px solid var(--border); padding: 24px 12px; }
+.sidebar nav { display: flex; flex-direction: column; gap: 8px; }
+.sidebar button { text-align: left; border: 0; border-radius: 8px; padding: 13px 14px; background: transparent; color: #29382e; font-size: 15px; }
+.sidebar button:hover { background: #dce8d7; }
+.sidebar button.active { background: #b5c9aa; font-weight: bold; }
+.main-content { min-width: 0; padding: 30px; max-width: 1550px; width: 100%; margin: 0 auto; }
+.main-content h1 { font-size: 30px; margin: 0 0 6px; }
+.page-description { margin: 0 0 24px; color: #59655b; }
+.primary-button, .save-button { border: 0; border-radius: 8px; background: var(--green); color: white; font-weight: bold; padding: 12px 16px; }
+.primary-button:hover, .save-button:hover { background: #36513a; }
+.applications-layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); gap: 22px; align-items: start; }
+.tracker-panel, .placeholder-panel { background: white; border: 1px solid var(--border); border-radius: 12px; padding: 22px; min-width: 0; }
+.error-message, .success-message { padding: 12px; border-radius: 8px; overflow-wrap: anywhere; font-weight: bold; }
+.error-message { color: #991b1b; background: #fee2e2; }
+.success-message { color: #166534; background: #dcfce7; }
+/* All components share the same status colors. */
+.status-badge { display: inline-block; white-space: nowrap; border-radius: 20px; padding: 5px 10px; font-size: 13px; font-weight: bold; background: #e5e7eb; color: #374151; }
+[data-status="Saved"] { background: #e5e7eb; color: #374151; }
+[data-status="Applied"] { background: #dbeafe; color: #1e40af; }
+[data-status="Under Review"] { background: #fef3c7; color: #92400e; }
+[data-status="Interview"] { background: #ede9fe; color: #5b21b6; }
+[data-status="Assessment"] { background: #ffedd5; color: #9a3412; }
+[data-status="Offer"] { background: #dcfce7; color: #166534; }
+[data-status="Rejected"] { background: #fee2e2; color: #991b1b; }
+@media (max-width: 1100px) { .applications-layout { grid-template-columns: 1fr; } }
+@media (max-width: 650px) {
+  .top-bar { padding: 12px; } .brand { font-size: 18px; } .site-layout { grid-template-columns: 1fr; }
+  .sidebar { padding: 8px; border-right: 0; border-bottom: 1px solid var(--border); }
+  .sidebar nav { flex-direction: row; overflow-x: auto; } .sidebar button { white-space: nowrap; }
+  .main-content { padding: 18px; } .main-content h1 { font-size: 26px; }
+}

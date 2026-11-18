@@ -1,0 +1,4 @@
+.application-status { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 14px; }
+.application-status label { font-size: 13px; font-weight: bold; }
+.application-status select { min-width: 125px; padding: 7px 10px; border: 1px solid #c8d4c3; border-radius: 7px; cursor: pointer; }
+.application-status option { background: white; color: #29382e; }
