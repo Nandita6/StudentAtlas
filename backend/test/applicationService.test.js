@@ -1,5 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import { createUser } from "../src/repositories/userRepository.js";
 
 import {
   validateApplication,
@@ -10,6 +11,12 @@ import {
   changeApplicationStatus,
 } from "../src/services/applicationService.js";
 
+
+const testUserId = createUser(
+  "Test User",
+  `test-service-${Date.now()}@example.com`,
+  "test-password-hash"
+);
 
 test("valid application passes validation", () => {
   const application = {
@@ -131,7 +138,7 @@ test("saveApplication stores application in database", () => {
     notes: "Submitted online",
   };
 
-  const savedApplication = saveApplication(application);
+const savedApplication = saveApplication(application, testUserId);
 
   assert.equal(savedApplication.company_name, "Amazon");
   assert.equal(savedApplication.job_title, "Software Engineer Intern");
@@ -147,11 +154,13 @@ test("changeApplicationStatus updates saved application status", () => {
     status: "Applied",
   };
 
-  const savedApplication = saveApplication(application);
+  const savedApplication = saveApplication(application, testUserId);
 
   const updatedApplication = changeApplicationStatus(
     savedApplication.id,
-    "Interview"
+    "Interview",
+    testUserId
+
 
   );
 
@@ -162,8 +171,8 @@ test("changeApplicationStatus updates saved application status", () => {
 
 test("changeApplicationStatus throws error for missing application", () => {
   assert.throws(
-    () => changeApplicationStatus(999999, "Interview"),
-    /Application not found/
-    
+  () => changeApplicationStatus(999999, "Interview", testUserId), 
+        /Application not found/
+
   );
 });
