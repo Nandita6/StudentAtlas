@@ -1,3 +1,12 @@
+CREATE TABLE IF NOT EXISTS users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    full_name TEXT NOT NULL,
+    email TEXT NOT NULL UNIQUE,
+    password_hash TEXT NOT NULL,
+    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+
 CREATE TABLE IF NOT EXISTS applications (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     company_name TEXT NOT NULL,
@@ -7,8 +16,11 @@ CREATE TABLE IF NOT EXISTS applications (
     deadline TEXT,
     follow_up_date TEXT,
     job_url TEXT,
-    notes TEXT
+    notes TEXT,
+    user_id INTEGER NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
+
 
 CREATE TABLE IF NOT EXISTS profiles (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -18,13 +30,7 @@ CREATE TABLE IF NOT EXISTS profiles (
     graduation_date TEXT,
     skills TEXT,
     interests TEXT,
-    date_of_birth TEXT
-);
--- Store registered StudentAtlas user accounts.
-CREATE TABLE IF NOT EXISTS users (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    full_name TEXT NOT NULL,
-    email TEXT NOT NULL UNIQUE,
-    password_hash TEXT NOT NULL,
-    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+    date_of_birth TEXT,
+    user_id INTEGER NOT NULL UNIQUE,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );

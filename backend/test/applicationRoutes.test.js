@@ -5,9 +5,7 @@ import http from "node:http";
 import app from "../src/app.js";
 import {
   deleteApplication,
-
-} 
-from "../src/repositories/applicationRepository.js";
+} from "../src/repositories/applicationRepository.js";
 
 function startTestServer() {
   return new Promise((resolve) => {
@@ -24,16 +22,51 @@ function startTestServer() {
   });
 }
 
+async function loginTestUser(baseUrl) {
+  const email = `route-test-${Date.now()}-${Math.random()}@example.com`;
+  const password = "test-password-123";
+
+  await fetch(`${baseUrl}/api/auth/register`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      fullName: "Route Test User",
+      email,
+      password,
+    }),
+  });
+
+  const loginResponse = await fetch(`${baseUrl}/api/auth/login`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      email,
+      password,
+    }),
+  });
+
+  const cookie = loginResponse.headers.get("set-cookie");
+
+  return cookie;
+}
+
 test("POST /api/applications creates an application", async () => {
   const { server, baseUrl } = await startTestServer();
 
   let savedApplication;
 
   try {
+    const cookie = await loginTestUser(baseUrl);
+
     const response = await fetch(`${baseUrl}/api/applications`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Cookie: cookie,
       },
       body: JSON.stringify({
         company: "Apple",
@@ -41,7 +74,6 @@ test("POST /api/applications creates an application", async () => {
         applicationDate: "2026-11-10",
         status: "Applied",
         notes: "Submitted online",
-
       }),
     });
 
@@ -52,13 +84,7 @@ test("POST /api/applications creates an application", async () => {
     assert.equal(savedApplication.company_name, "Apple");
     assert.equal(savedApplication.job_title, "Software Engineer Intern");
     assert.equal(savedApplication.status, "Applied");
-  } 
-  finally {
-    if (savedApplication?.id) {
-
-      deleteApplication(savedApplication.id);
-    }
-
+  } finally {
     server.close();
   }
 });
@@ -67,19 +93,20 @@ test("POST /api/applications rejects invalid application", async () => {
   const { server, baseUrl } = await startTestServer();
 
   try {
+    const cookie = await loginTestUser(baseUrl);
+
     const response = await fetch(`${baseUrl}/api/applications`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Cookie: cookie,
       },
-      
       body: JSON.stringify({
         company: "",
         position: "",
         applicationDate: "",
         status: "",
       }),
-
     });
 
     assert.equal(response.status, 400);
@@ -87,25 +114,23 @@ test("POST /api/applications rejects invalid application", async () => {
     const body = await response.json();
 
     assert.match(body.error, /Company name is required/);
-  } 
-  finally {
+  } finally {
     server.close();
   }
-
 });
 
 test("PATCH /api/applications/:id/status updates application status", async () => {
   const { server, baseUrl } = await startTestServer();
 
-  let savedApplication;
-
   try {
+    const cookie = await loginTestUser(baseUrl);
+
     const createResponse = await fetch(`${baseUrl}/api/applications`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Cookie: cookie,
       },
-
       body: JSON.stringify({
         company: "Netflix",
         position: "Software Engineer Intern",
@@ -114,7 +139,7 @@ test("PATCH /api/applications/:id/status updates application status", async () =
       }),
     });
 
-    savedApplication = await createResponse.json();
+    const savedApplication = await createResponse.json();
 
     const updateResponse = await fetch(
       `${baseUrl}/api/applications/${savedApplication.id}/status`,
@@ -122,6 +147,7 @@ test("PATCH /api/applications/:id/status updates application status", async () =
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
+          Cookie: cookie,
         },
         body: JSON.stringify({
           status: "Interview",
@@ -135,12 +161,7 @@ test("PATCH /api/applications/:id/status updates application status", async () =
 
     assert.equal(updatedApplication.status, "Interview");
     assert.equal(updatedApplication.id, savedApplication.id);
-  } 
-  finally {
-    if (savedApplication?.id) {
-      deleteApplication(savedApplication.id);
-    }
-
+  } finally {
     server.close();
   }
 });
@@ -149,12 +170,15 @@ test("PATCH /api/applications/:id/status returns 404 for missing application", a
   const { server, baseUrl } = await startTestServer();
 
   try {
+    const cookie = await loginTestUser(baseUrl);
+
     const response = await fetch(
       `${baseUrl}/api/applications/999999/status`,
       {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
+          Cookie: cookie,
         },
         body: JSON.stringify({
           status: "Interview",
@@ -167,8 +191,7 @@ test("PATCH /api/applications/:id/status returns 404 for missing application", a
     const body = await response.json();
 
     assert.equal(body.error, "Application not found.");
-  } 
-  finally {
+  } finally {
     server.close();
   }
 });
