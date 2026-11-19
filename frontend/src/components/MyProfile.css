@@ -1,0 +1,81 @@
+/* Main profile section */
+.my-profile {
+  max-width: 950px;
+  margin: 0 auto;
+}
+
+/* Profile form container */
+.profile-form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+  margin-top: 25px;
+  padding: 30px;
+  background-color: #ffffff;
+  border: 1px solid #dce7d9;
+  border-radius: 16px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+}
+
+/* Labels above each field */
+.profile-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #344b3a;
+}
+
+/* Text fields and date fields */
+.profile-form input,
+.profile-form textarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px;
+  border: 1px solid #cbd9c8;
+  border-radius: 8px;
+  background-color: #ffffff;
+  color: #333333;
+  font: inherit;
+}
+
+/* Highlight the field being edited */
+.profile-form input:focus,
+.profile-form textarea:focus {
+  outline: 2px solid #93b79b;
+  outline-offset: 1px;
+}
+
+/* Make text areas comfortable to type in */
+.profile-form textarea {
+  min-height: 90px;
+  resize: vertical;
+}
+
+/* Save button */
+.profile-form button {
+  grid-column: 1 / -1;
+  justify-self: start;
+  padding: 12px 25px;
+  border: none;
+  border-radius: 8px;
+  background-color: #3f614a;
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* Button hover effect */
+.profile-form button:hover {
+  background-color: #304d39;
+}
+
+/* Stack fields on smaller screens */
+@media (max-width: 650px) {
+  .profile-form {
+    grid-template-columns: 1fr;
+    padding: 20px;
+  }
+}

@@ -1,0 +1,81 @@
+/* Center the login and signup page. */
+.authPage {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #f7f8f5;
+  font-family: Arial, sans-serif;
+  padding: 20px;
+  text-align: center;
+}
+
+/* Style the StudentAtlas title. */
+.authPage h1 {
+  color: #496b58;
+  font-size: 36px;
+  margin-bottom: 12px;
+}
+
+/* Style the login and signup heading. */
+.authPage h2 {
+  color: #333333;
+  font-size: 24px;
+  margin-bottom: 24px;
+}
+
+/* Style the button that switches between login and signup. */
+.authPage button {
+  background-color: #496b58;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 20px;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+/* Change the button color when the mouse hovers over it. */
+.authPage button:hover {
+  background-color: #385342;
+}
+/* Organize the form fields vertically. */
+.authForm {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  width: 100%;
+  max-width: 350px;
+  margin-bottom: 20px;
+}
+
+/* Style the name, email, and password fields. */
+.authForm input {
+  width: 100%;
+  padding: 13px 15px;
+  border: 1px solid #d5ddd6;
+  border-radius: 8px;
+  font-size: 15px;
+  background-color: white;
+  box-sizing: border-box;
+}
+
+/* Highlight the input field when selected. */
+.authForm input:focus {
+  outline: none;
+  border-color: #496b58;
+  box-shadow: 0 0 0 2px rgba(73, 107, 88, 0.12);
+}
+
+/* Make the main submit button fill the form width. */
+.authForm button {
+  width: 100%;
+  margin-top: 5px;
+  font-weight: 600;
+}
+
+/* Add spacing to the button that switches forms. */
+.authPage > button {
+  margin-top: 5px;
+}
