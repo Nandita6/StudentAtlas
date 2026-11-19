@@ -9,3 +9,22 @@ CREATE TABLE IF NOT EXISTS applications (
     job_url TEXT,
     notes TEXT
 );
+
+CREATE TABLE IF NOT EXISTS profiles (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    full_name TEXT,
+    university TEXT,
+    degree TEXT,
+    graduation_date TEXT,
+    skills TEXT,
+    interests TEXT,
+    date_of_birth TEXT
+);
+-- Store registered StudentAtlas user accounts.
+CREATE TABLE IF NOT EXISTS users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    full_name TEXT NOT NULL,
+    email TEXT NOT NULL UNIQUE,
+    password_hash TEXT NOT NULL,
+    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
